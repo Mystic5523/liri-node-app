@@ -1,0 +1,119 @@
+require('dotenv').config();
+const keys = require('./keys');
+const Spotify = require('node-spotify-api');
+const Twitter = require('twitter');
+var request = require("request");
+const fs = require('fs');
+
+const spot = new Spotify(keys.spotify);
+const twit = new Twitter(keys.twitter);
+
+const command = process.argv[2];
+const detail = process.argv[3];
+
+console.log(`Starting ${command}\n`)
+switch (command) {
+    case 'my-tweets':
+        getTweets()
+        break;
+    case 'spotify-this-song':
+        getSpot()
+        break;
+    case 'movie-this':
+        getMovie()
+        break;
+    case 'do-what-it-says':
+        doRandom();
+        break;
+    default:
+        console.log('Please use a correct command!')
+}
+
+function getTweets() {
+    var params = {
+        screen_name: 'nystic5523',
+        count: 20
+
+    };
+    twit.get('statuses/user_timeline', params, function (error, tweets, response) {
+        if (!error) {
+
+            for (var i = 0; i < tweets.length; i++) {
+                var date = tweets[i].created_at;
+                console.log("@nystic5523: " + tweets[i].text + " Created At: " + date.substring(0, 19));
+
+                console.log("-----------------------");
+            }
+
+        }
+    });
+}
+
+function getSpot() {
+    if (detail.length < 1) {
+        detail = "the sign ace of base"
+    }
+    spot.search({ type: 'track', query: detail }, function (err, data) {
+        if (err) {
+            console.log('Error occurred: ' + err);
+            return;
+
+        }
+        console.log("Artist: " + data.tracks.items[0].album.artists[0].name);
+        console.log("Song Title: " + data.tracks.items[0].name)
+        console.log("Preview URL: " + data.tracks.items[0].preview_url)
+        console.log("Album: " + data.tracks.items[0].album.name)
+    });
+}
+
+// else if (input1 === "movie-this") 
+function getMovie() {
+    if (detail.length < 1) {
+
+        detail = "Mr. Nobody";
+    };
+
+
+
+    var queryUrl = "http://www.omdbapi.com/?t=" + detail + "&y=&plot=short&tomatoes=true&apikey=trilogy";
+
+
+    request(queryUrl, function (error, response, body) {
+
+
+        if (!error && response.statusCode === 200) {
+            var body = JSON.parse(body);
+
+
+            // * Title of the movie.
+            console.log("Title: " + body.Title)
+            // * Year the movie came out.
+            console.log("Year: " + body.Year)
+            // * IMDB Rating of the movie.
+            console.log("IMDB Rating: " + body.imdbRating)
+            // * Rotten Tomatoes Rating of the movie.
+            console.log("Rotten Tomatoes: " + body.Ratings[1].Value)
+            // * Country where the movie was produced.
+            console.log("Country Produced: " + body.Country)
+            // * Language of the movie.
+            console.log("Language: " + body.Language)
+            // * Plot of the movie.
+            console.log("Plot: " + body.Plot)
+            // * Actors in the movie.
+            console.log("Actors: " + body.Actors)
+
+        }
+    });
+}
+
+function doRandom() {
+    fs.readFile("./random.txt", "utf-8", function (error, data) {
+
+        if (error) {
+            return console.log(error);
+        }
+
+        console.log(data);
+
+    });
+}
