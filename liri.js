@@ -9,7 +9,8 @@ const spot = new Spotify(keys.spotify);
 const twit = new Twitter(keys.twitter);
 
 const command = process.argv[2];
-const detail = process.argv[3];
+// const detail = process.argv[3];
+var detail = process.argv.splice(3).join(" ");
 
 console.log(`Starting ${command}\n`)
 switch (command) {
@@ -92,7 +93,7 @@ function getMovie() {
             // * IMDB Rating of the movie.
             console.log("IMDB Rating: " + body.imdbRating)
             // * Rotten Tomatoes Rating of the movie.
-            console.log("Rotten Tomatoes: " + body.Ratings[1].Value)
+            console.log("Rotten Tomatoes: " + body.Ratings[1].Value?body.Ratings[1].Value:null)
             // * Country where the movie was produced.
             console.log("Country Produced: " + body.Country)
             // * Language of the movie.
