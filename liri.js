@@ -83,25 +83,26 @@ function getMovie() {
 
 
         if (!error && response.statusCode === 200) {
-            var body = JSON.parse(body);
+            var data = JSON.parse(body);
 
 
             // * Title of the movie.
-            console.log("Title: " + body.Title)
+            console.log("Title: " + data.Title)
             // * Year the movie came out.
-            console.log("Year: " + body.Year)
+            console.log("Year: " + data.Year)
             // * IMDB Rating of the movie.
-            console.log("IMDB Rating: " + body.imdbRating)
+            console.log("IMDB Rating: " + data.imdbRating)
             // * Rotten Tomatoes Rating of the movie.
-            console.log("Rotten Tomatoes: " + body.Ratings[1].Value?body.Ratings[1].Value:null)
+            var rating =data.Ratings[1] ? data.Ratings[1].Value : "N/A"
+            console.log("Rotten Tomatoes: " + rating)
             // * Country where the movie was produced.
-            console.log("Country Produced: " + body.Country)
+            console.log("Country Produced: " + data.Country)
             // * Language of the movie.
-            console.log("Language: " + body.Language)
+            console.log("Language: " + data.Language)
             // * Plot of the movie.
-            console.log("Plot: " + body.Plot)
+            console.log("Plot: " + data.Plot)
             // * Actors in the movie.
-            console.log("Actors: " + body.Actors)
+            console.log("Actors: " + data.Actors)
 
         }
     });
